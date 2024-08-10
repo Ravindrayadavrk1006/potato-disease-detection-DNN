@@ -1,0 +1,4 @@
+/api contain the fastapi server code 
+starting fastapi server using uvicorn
+	just run the main.py file since the uvicorn code is written in the file itself
+	
