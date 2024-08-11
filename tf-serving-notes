@@ -1,0 +1,99 @@
+#DO NOT READ THIS EVERYTING IS IN DEEP-NEURAL-NETWORK-NOTES IN MAIN DNN NOTES FOLDER
+
+-------------------------------------------------------------- DEEP NEURAL NETWORK NOTES------------------------------------
+TENSORFLOW INPUT PIPELINE:
+	it efficiently help in processing the data provides various function and inbuild capabilities to do it
+	tf.data.Dataset is the class to do all this 
+	
+	tf_dataset = tf.data.Dataset.list_files('foldername') //load the dataset from some location
+					//can do lot of things 
+	tf_dataset = tf_dataset.map(process_img)    //convert the image to numpy array and extract lable
+	tf_dataset = tf_dataset.filter(filter_func) //filter the dataset on the basis of filter_func remove the image which satisfies the fi
+	tf_dataset = tf_dataset.map(lambda x: x/255) divide the tensor by 255 since it requires numpy in range of 0-255 it will work still but not good result
+	tf.train(tf_dataset);
+	
+	
+------------------------------------ TF SERVING NOTES--------------------------------
+download the docker image 
+1. docker pull tensorflow/serving
+2. docker run -it --name tensflow-serving-server \
+-v /mnt/d/Repos/ml-ai/deep-neural-networks/deep-neural-network-project/models:/models \
+-p 8501:8501 \
+--entrypoint /bin/bash \
+tensorflow/serving
+
+3. let's try and start the tensorflow_model_server manually inside the container
+tensorflow_model_server --rest_api_port=8501 --model_name=potato_disease --model_base_path=/my_models/models/
+
+#models is the directory which contain all the versions of a models it will serve the model which has highest version
+#this above command will make available only the latest or highest version of model 
+#to make all the versions of a model available we need to use model_config_file
+
+	model_config_file.txt
+data->
+model_config_list{
+	config{
+		name: 'potato_disease'
+		base_path: '/my_models/models/'
+		model_platform: 'tensorflow'
+		model_version_policy: {all: {}}
+	}
+}
+
+#command to use this config file 
+tensorflow_model_server --rest_api_port=8501 --model_name=potato_disease --model_config_file=/my_models/model_config.a
+now when we run get http://localhost:8501/v1/models/potato_disease
+we get
+{
+ "model_version_status": [
+  {
+   "version": "2",
+   "state": "AVAILABLE",
+   "status": {
+    "error_code": "OK",
+    "error_message": ""
+   }
+  },
+  {
+   "version": "1",
+   "state": "AVAILABLE",
+   "status": {
+    "error_code": "OK",
+    "error_message": ""
+   }
+  }
+ ]
+}
+
+
+we can make predictions by making a curl post request at 
+http://localhost:8501/v1/models/potato_disease/versions/1:predict
+
+ in the above data:
+	model_version_policy: {all: {}} this line allows all model version to be served
+
+4
+	now if we want to run everything without entering the docker container i.e combining 2nd and 3rd command 
+docker run -it --name tensflow-serving-server \
+-p 8501:8501 \
+-v /mnt/d/deep-neural-network-project/models:/potato_disease \
+tensorflow/serving \
+--rest_api_port=8501 \
+--model_config_file=/potato_disease/potato_tf_serving_config.a
+
+5. then make call to the server 
+format of data
+{
+	"instances": data_object.to_list()
+}
+
+6. output format will be a json with predictions key containing all the predictions
+since it has a batch input functionality so batch output will be returned and hence it will contain data in the same format
+
+
+#in above command we are overriding the default entrypoint since on start it will run those models
+#by default it will start the tensorflow_model_server inside the container at the specified port
+
+
+
+

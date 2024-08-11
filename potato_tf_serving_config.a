@@ -1,0 +1,8 @@
+model_config_list{
+	config{
+		name: 'potato_disease'
+		base_path: '/potato_disease/models/'
+		model_platform: 'tensorflow'
+		model_version_policy: {all: {}}
+	}
+}

@@ -9,7 +9,7 @@ app = FastAPI()
 async def ping():
     return "hello, I am alive"
 
-model_location = 'D:/Repos/ml-ai/deep-neural-networks/deep-neural-network-project/models/saved_model'
+model_location = 'D:/Repos/ml-ai/deep-neural-networks/deep-neural-network-project/models/1'
 
 MODEL = tf.keras.models.load_model(model_location)
 CLASS_NAMES = ['Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy']
