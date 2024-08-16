@@ -1,5 +1,5 @@
 # potato-disease-detection-DNN
-### download the repo and have docker serving container downloaded from docker
+### download the repo and have tensorflow serving container downloaded from docker
 1. running tensorflow serving container container
   docker run --name tensflow-serving-server \
   -p 8501:8501 \
