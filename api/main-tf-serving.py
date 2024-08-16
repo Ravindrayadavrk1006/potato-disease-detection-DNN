@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from core.logics import read_file_as_image
 import tensorflow as tf
@@ -6,7 +7,16 @@ import numpy as np
 import requests
 
 app = FastAPI()
-
+origins = [
+    "http://localhost:3000"
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = origins,
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]
+)
 @app.get('/ping')
 async def ping():
     return "hello, I am alive"

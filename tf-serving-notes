@@ -74,13 +74,15 @@ http://localhost:8501/v1/models/potato_disease/versions/1:predict
 
 4
 	now if we want to run everything without entering the docker container i.e combining 2nd and 3rd command 
-docker run -it --name tensflow-serving-server \
+docker run --name tensflow-serving-server \
 -p 8501:8501 \
--v /mnt/d/deep-neural-network-project/models:/potato_disease \
+-v /mnt/d/Repos/ml-ai/deep-neural-networks/deep-neural-network-project:/potato_disease \
 tensorflow/serving \
 --rest_api_port=8501 \
 --model_config_file=/potato_disease/potato_tf_serving_config.a
 
+//will use the latest model to make call
+make calls --> http://localhost:8501/v1/models/potato_disease:predict 
 5. then make call to the server 
 format of data
 {
